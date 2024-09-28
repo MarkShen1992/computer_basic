@@ -174,8 +174,6 @@ Transmission Control Protocol, Src Port: 58626, Dst Port: 8080, Seq: 0, Len: 0
   
   - 客户端通知服务器，它想建立连接。
   - 客户端发送了一个初始的序列号供后续通信使用。
-  
-  
 
 - 第二次握手
 
@@ -311,8 +309,6 @@ Transmission Control Protocol, Src Port: 8080, Dst Port: 58626, Seq: 0, Ack: 1, 
   
   - 服务器同意与客户端建立连接，并发送了自己的初始序列号。
   - 确认已经接收到了客户端的初始序列号。
-  
-  
 
 - 第三次握手
 
@@ -436,8 +432,6 @@ Transmission Control Protocol, Src Port: 58626, Dst Port: 8080, Seq: 1, Ack: 1, 
   
   - 客户端确认收到了服务器的初始序列号，连接正式建立。
   - 双方都可以开始进行数据传输。
-
-
 
 三次后 `TCP/IP` 已经完成连接的建立，接下来要做的事情就是请求接口，返回数据。
 
@@ -899,8 +893,6 @@ Transmission Control Protocol, Src Port: 58626, Dst Port: 8080, Seq: 98, Ack: 12
   
   - 客户端通知服务器，它已经不再发送数据，要求关闭从客户端到服务器的数据通道。
 
-
-
 - 第二次挥手
 
 ```shell
@@ -1024,8 +1016,6 @@ Transmission Control Protocol, Src Port: 58626, Dst Port: 8080, Seq: 98, Ack: 12
   
   - 服务器确认已经接收到了客户端的FIN报文。
   - 客户端到服务器的单向通道关闭，但服务器到客户端的通道仍然保持开放。
-
-
 
 - 第三次挥手
 
@@ -1152,8 +1142,6 @@ Transmission Control Protocol, Src Port: 8080, Dst Port: 58626, Seq: 127, Ack: 9
   
   - 服务器通知客户端，它已经完成了数据发送，并要求关闭服务器到客户端的通道。
 
-
-
 - 第四次挥手
 
 ```shell
@@ -1256,7 +1244,6 @@ Transmission Control Protocol, Src Port: 58626, Dst Port: 8080, Seq: 99, Ack: 12
         [This is an ACK to the segment in frame: 9]
         [The RTT to ACK the segment was: 0.000215000 seconds]
         [iRTT: 0.000438000 seconds]
-
 ```
 
 - **客户端**收到服务器的FIN报文段后，发送一个**ACK**报文段来确认断开请求。ACK的值是**服务器序列号+1**。
@@ -1273,3 +1260,51 @@ Transmission Control Protocol, Src Port: 58626, Dst Port: 8080, Seq: 99, Ack: 12
   **目的**：
   
   - 客户端确认收到了服务器的FIN报文，至此双方的连接完全关闭。
+
+
+
+## TCP 参数
+
+- `Seq`：表示该数据段的序号，用于对收到的数据段重拍序。需要理解 `Seq` 的增长方式。
+  
+  - `Seq` 号的大小是根据上一个数据段的 `Seq`号和长度相加而来的
+
+- `Len`：该数据段的长度。如果 `Len = 0` 的话，其实是有 `TCP` 头的。不要以为 `Len = 0` 是没有意义的。
+
+- `Ack`：确认号，接收方向发送法确认已经收到了哪些字节。
+  
+  - 比如，甲发送了 `Seq: x Len: y` 的数据段给了乙，那么乙回复的确认号就是 `x + y` ，这意味着它收到了 `x + y` 之前的所有字节。
+
+
+
+## TCP 头附带的标志位
+
+- `SYN`：表示正在**发起连接请求**。因为连接是双向的，所以建立连接的时候，双方都要发送一个 `SYN`。
+
+- `FIN`：携带这个标志的包表示正在**请求终止连接**。因为连接是双向的，所以彻底关闭一个连接的时候，双方都要发一个 `FIN`。
+
+- `RST`：用于**重置一个混乱的连接**，或者**拒绝一个无效的请求**。
+
+
+
+## 一个标准建立连接的过程
+
+在这里推荐两篇大神陈皓(@haoel)的文章:
+
+- [《TCP的那些事儿·上》](https://coolshell.org/articles/11564.html/)
+
+- [《TCP的那些事儿·下》](https://coolshell.org/articles/11609.html/)
+
+
+
+- TCP 的三次握手
+
+![](./tcp_open_close.jpg)
+
+- [Two General's Problem]([https://zh.wikipedia.org/wiki/%E4%B8%A4%E5%86%9B%E9%97%AE%E9%A2%98)
+
+
+
+- TCP 断链接的四次挥手
+
+![](./tcpclosesimul.png)
